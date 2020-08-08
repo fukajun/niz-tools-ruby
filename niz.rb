@@ -2,6 +2,8 @@
 require "hid_api" # gem install hid_api
 require "pp"
 require "timeout"
+require "json"
+require "time"
 
 class NiZ
 	Keymap = Struct.new(:level, :key_id, :hwcode) do
@@ -456,6 +458,19 @@ if $0 == __FILE__
 	puts "#{niz.keycount} keys"
 
 	case mode
+	when 'export'
+		puts "Reading key mapping..."
+		progress = ProgressBar.new(niz.keycount * 3)
+		read_all = niz.read_all do |count, keymap|
+			progress.increment!
+		end
+
+		mapping = NiZ.mapping_from_array(read_all)
+		file_name = "keymap_#{Time.now.strftime('%Y-%m-%d-%H%M%s')}.json"
+		File.open(file_name, 'w+') do |f|
+			f.puts(JSON.pretty_generate(mapping))
+		end
+
 	when 'read'
 		puts "Reading key mapping..."
 		progress = ProgressBar.new(niz.keycount * 3)
