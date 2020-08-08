@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
 
-
 require "./niz.rb"
 require 'progress_bar'
+require 'json'
+
+options = ARGV.getopts("", "config:")
+config = options['config']
 
 override_mapping = lambda do |mapping|
 	# mapping[level][key_id] = hwcode
@@ -13,9 +16,13 @@ override_mapping = lambda do |mapping|
 	# key_id: 1-66
 	# hwcode: See ./niz.rb HWCODE constant
 
-	mapping[0][61] = 68 # Set key_id 61 (right side of space) = 68 (super)
-	mapping[0][62] = 71
-	mapping[0][63] = 74
+	json = File.open(config, 'r').read
+	expect_mapping = JSON.parse(json)
+	expect_mapping.each do |i, maps|
+		maps.each do |k, v|
+			mapping[i.to_i][k.to_i] = v
+		end
+	end
 end
 
 #################################################################
