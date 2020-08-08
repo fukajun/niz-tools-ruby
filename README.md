@@ -95,9 +95,17 @@ Reading key counter...
 +--------+-------------------+-------------------------------+-------------------------------+-------+
 ```
 
+## Export keymap
+
+```
+$ bundle exec niz.rb --mode export
+```
+
 ## Write keymap
 
-See [./write-example.rb](./write-example.rb)
+```
+$ bundle exec write-example.rb --config *keymap_export.json*
+```
 
 ## Calibration
 
